@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:olx/home.dart';
+import 'package:olx/views/home.dart';
 
 final ThemeData theme = ThemeData();
 
