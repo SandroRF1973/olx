@@ -3,14 +3,14 @@ import 'package:olx/models/usuario.dart';
 import 'package:olx/views/input_customizado.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class Home extends StatefulWidget {
-  const Home({super.key});
+class Login extends StatefulWidget {
+  const Login({super.key});
 
   @override
-  State<Home> createState() => _HomeState();
+  State<Login> createState() => _LoginState();
 }
 
-class _HomeState extends State<Home> {
+class _LoginState extends State<Login> {
   final TextEditingController _controllerEmail =
       TextEditingController(text: "sandro@gmail.com");
   final TextEditingController _controllerSenha =
@@ -26,7 +26,9 @@ class _HomeState extends State<Home> {
     auth
         .createUserWithEmailAndPassword(
             email: usuario.email, password: usuario.senha)
-        .then((firebaseUser) {});
+        .then((firebaseUser) {
+      Navigator.pushReplacementNamed(context, "/");
+    });
   }
 
   _logarUsuario(Usuario usuario) {
@@ -35,7 +37,9 @@ class _HomeState extends State<Home> {
     auth
         .signInWithEmailAndPassword(
             email: usuario.email, password: usuario.senha)
-        .then((firebaseUser) {});
+        .then((firebaseUser) {
+      Navigator.pushReplacementNamed(context, "/");
+    });
   }
 
   _validarCampos() {
