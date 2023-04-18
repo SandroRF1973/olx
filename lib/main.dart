@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:olx/views/home.dart';
 
@@ -11,7 +12,10 @@ final ThemeData temaPadrao = ThemeData().copyWith(
 //   primaryColor: const Color(0xff9c27b0),
 // );
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
   runApp(MaterialApp(
     title: "OLX",
     home: const Home(),

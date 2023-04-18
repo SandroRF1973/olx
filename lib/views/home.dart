@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:olx/models/usuario.dart';
+import 'package:olx/views/input_customizado.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -8,7 +11,59 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final TextEditingController _controllerEmail =
+      TextEditingController(text: "sandro@gmail.com");
+  final TextEditingController _controllerSenha =
+      TextEditingController(text: "1234567");
+
   bool _cadastrar = false;
+  String _mensagemErro = "";
+  String _textoBotao = "Entrar";
+
+  _cadastrarUsuario(Usuario usuario) {
+    FirebaseAuth auth = FirebaseAuth.instance;
+
+    auth
+        .createUserWithEmailAndPassword(
+            email: usuario.email, password: usuario.senha)
+        .then((firebaseUser) {});
+  }
+
+  _logarUsuario(Usuario usuario) {
+    FirebaseAuth auth = FirebaseAuth.instance;
+
+    auth
+        .signInWithEmailAndPassword(
+            email: usuario.email, password: usuario.senha)
+        .then((firebaseUser) {});
+  }
+
+  _validarCampos() {
+    String email = _controllerEmail.text;
+    String senha = _controllerSenha.text;
+
+    if (email.isNotEmpty && email.contains("@")) {
+      if (senha.isNotEmpty && senha.length > 6) {
+        Usuario usuario = Usuario();
+        usuario.email = email;
+        usuario.senha = senha;
+
+        if (_cadastrar) {
+          _cadastrarUsuario(usuario);
+        } else {
+          _logarUsuario(usuario);
+        }
+      } else {
+        setState(() {
+          _mensagemErro = "Preencha a senha! Digite mais de 6 caracteres";
+        });
+      }
+    } else {
+      setState(() {
+        _mensagemErro = "Preencha o E-mail válido";
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,27 +86,16 @@ class _HomeState extends State<Home> {
                     height: 150,
                   ),
                 ),
-                TextField(
+                InputCustomizado(
+                  controller: _controllerEmail,
+                  hint: "E-mail",
                   autofocus: true,
-                  keyboardType: TextInputType.emailAddress,
-                  style: const TextStyle(fontSize: 20),
-                  decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
-                      hintText: "E-mail",
-                      filled: true,
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(6))),
+                  type: TextInputType.emailAddress,
                 ),
-                TextField(
-                  obscureText: true,
-                  keyboardType: TextInputType.text,
-                  style: const TextStyle(fontSize: 20),
-                  decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
-                      hintText: "Senha",
-                      filled: true,
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(6))),
+                InputCustomizado(
+                  controller: _controllerSenha,
+                  hint: "Senha",
+                  obscure: true,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -62,17 +106,33 @@ class _HomeState extends State<Home> {
                         onChanged: (bool valor) {
                           setState(() {
                             _cadastrar = valor;
+                            _textoBotao = "Entrar";
+                            if (_cadastrar) {
+                              _textoBotao = "Cadastrar";
+                            }
                           });
                         }),
                     const Text("Cadastrar"),
                   ],
                 ),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    _validarCampos();
+                  },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xff9c27b0),
                       padding: const EdgeInsets.fromLTRB(32, 16, 32, 16)),
-                  child: const Text("Entrar"),
+                  child: Text(_textoBotao),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: Text(
+                    _mensagemErro,
+                    style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.red),
+                  ),
                 )
               ],
             ),

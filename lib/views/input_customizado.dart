@@ -19,12 +19,14 @@ class InputCustomizado extends StatelessWidget {
     return TextField(
       controller: controller,
       obscureText: obscure ?? false,
-      keyboardType: TextInputType.text,
+      autofocus: autofocus ?? false,
+      keyboardType: type,
       style: const TextStyle(fontSize: 20),
       decoration: InputDecoration(
           contentPadding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
           hintText: hint,
           filled: true,
+          fillColor: Colors.white,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(6))),
     );
   }
