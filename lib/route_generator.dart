@@ -6,8 +6,6 @@ import 'package:olx/views/novo_anuncio.dart';
 
 class RouteGenerator {
   static Route<dynamic>? generateRoute(RouteSettings settings) {
-    //final args = settings.arguments;
-
     switch (settings.name) {
       case "/":
         return MaterialPageRoute(builder: (_) => const Anuncios());
