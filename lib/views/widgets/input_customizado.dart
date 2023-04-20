@@ -7,8 +7,9 @@ class InputCustomizado extends StatelessWidget {
   final bool? autofocus;
   final TextInputType? type;
 
-  InputCustomizado(
-      {@required this.controller,
+  const InputCustomizado(
+      {super.key,
+      @required this.controller,
       @required this.hint,
       this.obscure = false,
       this.autofocus = false,
@@ -19,12 +20,14 @@ class InputCustomizado extends StatelessWidget {
     return TextField(
       controller: controller,
       obscureText: obscure ?? false,
-      keyboardType: TextInputType.text,
+      autofocus: autofocus ?? false,
+      keyboardType: type,
       style: const TextStyle(fontSize: 20),
       decoration: InputDecoration(
           contentPadding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
           hintText: hint,
           filled: true,
+          fillColor: Colors.white,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(6))),
     );
   }
