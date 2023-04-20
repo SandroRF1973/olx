@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:olx/views/widgets/botao_customizado.dart';
+import 'dart:io';
 
 class NovoAnuncio extends StatefulWidget {
   const NovoAnuncio({super.key});
@@ -9,6 +10,7 @@ class NovoAnuncio extends StatefulWidget {
 }
 
 class _NovoAnuncioState extends State<NovoAnuncio> {
+  final List<File> _listaImagens = List.empty();
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -25,7 +27,23 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                //FormField(),
+                FormField<List>(
+                  initialValue: _listaImagens,
+                  validator: (imagens) {
+                    if (imagens!.isEmpty) {
+                      return "Necessário selecionar uma imagem!";
+                    }
+                    return null;
+                  },
+                  builder: (state) {
+                    return Column(
+                      children: [
+                        Container(),
+                        if (state.hasError) Text("[${state.errorText}]"),
+                      ],
+                    );
+                  },
+                ),
                 const Row(
                   children: [
                     Text("Estado"),

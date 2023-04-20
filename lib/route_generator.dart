@@ -6,7 +6,7 @@ import 'package:olx/views/novo_anuncio.dart';
 
 class RouteGenerator {
   static Route<dynamic>? generateRoute(RouteSettings settings) {
-    final args = settings.arguments;
+    //final args = settings.arguments;
 
     switch (settings.name) {
       case "/":
@@ -20,6 +20,8 @@ class RouteGenerator {
       default:
         _erroRota();
     }
+
+    return null;
   }
 
   static Route<dynamic> _erroRota() {
