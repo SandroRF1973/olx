@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:olx/models/usuario.dart';
-import 'package:olx/views/input_customizado.dart';
+import 'package:olx/views/widgets/botao_customizado.dart';
+import 'package:olx/views/widgets/input_customizado.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class Login extends StatefulWidget {
@@ -119,15 +120,22 @@ class _LoginState extends State<Login> {
                     const Text("Cadastrar"),
                   ],
                 ),
-                ElevatedButton(
+                BotaoCustomizado(
+                  texto: _textoBotao,
+                  corTexto: Colors.white,
                   onPressed: () {
                     _validarCampos();
                   },
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xff9c27b0),
-                      padding: const EdgeInsets.fromLTRB(32, 16, 32, 16)),
-                  child: Text(_textoBotao),
                 ),
+                // ElevatedButton(
+                //   onPressed: () {
+                //     _validarCampos();
+                //   },
+                //   style: ElevatedButton.styleFrom(
+                //       backgroundColor: const Color(0xff9c27b0),
+                //       padding: const EdgeInsets.fromLTRB(32, 16, 32, 16)),
+                //   child: Text(_textoBotao),
+                // ),
                 Padding(
                   padding: const EdgeInsets.only(top: 20),
                   child: Text(

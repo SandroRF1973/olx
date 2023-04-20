@@ -7,8 +7,9 @@ class InputCustomizado extends StatelessWidget {
   final bool? autofocus;
   final TextInputType? type;
 
-  InputCustomizado(
-      {@required this.controller,
+  const InputCustomizado(
+      {super.key,
+      @required this.controller,
       @required this.hint,
       this.obscure = false,
       this.autofocus = false,
