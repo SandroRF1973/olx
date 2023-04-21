@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:olx/views/widgets/botao_customizado.dart';
 import 'dart:io';
 
@@ -10,10 +11,24 @@ class NovoAnuncio extends StatefulWidget {
 }
 
 class _NovoAnuncioState extends State<NovoAnuncio> {
-  final List<File> _listaImagens = List.empty();
+  final List<File?> _listaImagens = [];
   final _formKey = GlobalKey<FormState>();
 
-  _selecionarImagemGaleria() {}
+  _selecionarImagemGaleria() async {
+    File? imagemSelecionada;
+
+    PickedFile? pickedFile =
+        // ignore: invalid_use_of_visible_for_testing_member
+        await ImagePicker.platform.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      imagemSelecionada = File(pickedFile.path);
+
+      setState(() {
+        _listaImagens.add(imagemSelecionada);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,6 +91,61 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
                                     ),
                                   );
                                 }
+                                if (_listaImagens.isNotEmpty) {
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) => Dialog(
+                                                  child: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Image.file(_listaImagens[
+                                                          indice]!),
+                                                      TextButton(
+                                                          onPressed: () {
+                                                            setState(() {
+                                                              _listaImagens
+                                                                  .removeAt(
+                                                                      indice);
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop();
+                                                            });
+                                                          },
+                                                          style: TextButton
+                                                              .styleFrom(
+                                                                  foregroundColor:
+                                                                      Colors
+                                                                          .red),
+                                                          child: const Text(
+                                                              "Excluir"))
+                                                    ],
+                                                  ),
+                                                ));
+                                      },
+                                      child: CircleAvatar(
+                                        radius: 50,
+                                        backgroundImage:
+                                            FileImage(_listaImagens[indice]!),
+                                        child: Container(
+                                          color: const Color.fromRGBO(
+                                              255, 255, 255, 0.4),
+                                          alignment: Alignment.center,
+                                          child: const Icon(
+                                            Icons.delete,
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }
+
                                 return Container();
                               }),
                         ),
