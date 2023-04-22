@@ -40,6 +40,8 @@ dependencies:
   firebase_storage: ^11.1.0
   cloud_firestore: ^4.5.1
   image_picker: ^0.8.7+4
+  brasil_fields: ^1.9.1
+  validadores: ^1.0.5
 
 dev_dependencies:
   flutter_test:

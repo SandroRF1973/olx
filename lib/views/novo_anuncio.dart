@@ -1,7 +1,10 @@
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:olx/views/widgets/botao_customizado.dart';
 import 'dart:io';
+
+import 'package:validadores/Validador.dart';
 
 class NovoAnuncio extends StatefulWidget {
   const NovoAnuncio({super.key});
@@ -12,7 +15,12 @@ class NovoAnuncio extends StatefulWidget {
 
 class _NovoAnuncioState extends State<NovoAnuncio> {
   final List<File?> _listaImagens = [];
+  final List<DropdownMenuItem<String>> _listaItensDropEstados = [];
+  final List<DropdownMenuItem<String>> _listaItensDropCategorias = [];
   final _formKey = GlobalKey<FormState>();
+
+  String? _itemSelecionadoEstado;
+  String _itemSelecionadoCategoria = "";
 
   _selecionarImagemGaleria() async {
     File? imagemSelecionada;
@@ -27,6 +35,21 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
       setState(() {
         _listaImagens.add(imagemSelecionada);
       });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _carregarItensDropDown();
+  }
+
+  _carregarItensDropDown() {
+    for (var estado in Estados.listaEstadosSigla) {
+      _listaItensDropEstados.add(DropdownMenuItem(
+        value: estado,
+        child: Text(estado),
+      ));
     }
   }
 
@@ -159,10 +182,31 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
                     );
                   },
                 ),
-                const Row(
+                Row(
                   children: [
-                    Text("Estado"),
-                    Text("Categoria"),
+                    Expanded(
+                        child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: DropdownButtonFormField(
+                        value: _itemSelecionadoEstado ?? "SP",
+                        hint: const Text("Estados"),
+                        style:
+                            const TextStyle(color: Colors.black, fontSize: 20),
+                        items: _listaItensDropEstados,
+                        validator: (valor) {
+                          return Validador()
+                              .add(Validar.OBRIGATORIO,
+                                  msg: "Campo obrigatório")
+                              .valido(valor);
+                        },
+                        onChanged: (valor) {
+                          setState(() {
+                            _itemSelecionadoEstado = valor;
+                          });
+                        },
+                      ),
+                    )),
+                    const Text("Categoria"),
                   ],
                 ),
                 const Text("Caixas de textos"),
