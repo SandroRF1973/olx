@@ -2,8 +2,9 @@ import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:olx/views/widgets/botao_customizado.dart';
+import 'package:olx/views/widgets/input_customizado.dart';
 import 'dart:io';
-
+import 'package:flutter/services.dart';
 import 'package:validadores/Validador.dart';
 
 class NovoAnuncio extends StatefulWidget {
@@ -257,7 +258,66 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
                     ),
                   ],
                 ),
-                const Text("Caixas de textos"),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 15, top: 15),
+                  child: InputCustomizado(
+                    controller: controller,
+                    hint: "Título",
+                    validator: (valor) {
+                      return Validador()
+                          .add(Validar.OBRIGATORIO, msg: "Campo obrigatório")
+                          .valido(valor);
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 15),
+                  child: InputCustomizado(
+                    controller: controller,
+                    hint: "Preço",
+                    type: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      RealInputFormatter(moeda: true)
+                    ],
+                    validator: (valor) {
+                      return Validador()
+                          .add(Validar.OBRIGATORIO, msg: "Campo obrigatório")
+                          .valido(valor);
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 15),
+                  child: InputCustomizado(
+                    controller: controller,
+                    hint: "Telefone",
+                    type: TextInputType.phone,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      TelefoneInputFormatter()
+                    ],
+                    validator: (valor) {
+                      return Validador()
+                          .add(Validar.OBRIGATORIO, msg: "Campo obrigatório")
+                          .valido(valor);
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 15),
+                  child: InputCustomizado(
+                    controller: controller,
+                    hint: "Descrição (200 caracteres)",
+                    maxLines: null,
+                    validator: (valor) {
+                      return Validador()
+                          .add(Validar.OBRIGATORIO, msg: "Campo obrigatório")
+                          .maxLength(200, msg: "Máximo de 200 caracteres")
+                          .valido(valor);
+                    },
+                  ),
+                ),
                 BotaoCustomizado(
                   texto: "Cadastrar anúncio",
                   corTexto: Colors.white,
