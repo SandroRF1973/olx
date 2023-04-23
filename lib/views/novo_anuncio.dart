@@ -216,6 +216,7 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
                         child: DropdownButtonFormField(
                           value: _itemSelecionadoEstado ?? "SP",
                           hint: const Text("Estados"),
+                          onSaved: (estado) {},
                           style: const TextStyle(
                               color: Colors.black, fontSize: 20),
                           items: _listaItensDropEstados,
@@ -322,7 +323,9 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
                   texto: "Cadastrar anúncio",
                   corTexto: Colors.white,
                   onPressed: () {
-                    if (_formKey.currentState!.validate()) {}
+                    if (_formKey.currentState!.validate()) {
+                      _formKey.currentState!.save();
+                    }
                   },
                 ),
               ],
