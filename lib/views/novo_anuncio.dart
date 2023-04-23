@@ -20,7 +20,7 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
   final _formKey = GlobalKey<FormState>();
 
   String? _itemSelecionadoEstado;
-  String _itemSelecionadoCategoria = "";
+  String? _itemSelecionadoCategoria;
 
   _selecionarImagemGaleria() async {
     File? imagemSelecionada;
@@ -45,6 +45,31 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
   }
 
   _carregarItensDropDown() {
+    _listaItensDropCategorias.add(const DropdownMenuItem(
+      value: "auto",
+      child: Text("Automóvel"),
+    ));
+
+    _listaItensDropCategorias.add(const DropdownMenuItem(
+      value: "imovel",
+      child: Text("Imóvel"),
+    ));
+
+    _listaItensDropCategorias.add(const DropdownMenuItem(
+      value: "eletro",
+      child: Text("Eletrônicos"),
+    ));
+
+    _listaItensDropCategorias.add(const DropdownMenuItem(
+      value: "moda",
+      child: Text("Moda"),
+    ));
+
+    _listaItensDropCategorias.add(const DropdownMenuItem(
+      value: "esportes",
+      child: Text("Esportes"),
+    ));
+
     for (var estado in Estados.listaEstadosSigla) {
       _listaItensDropEstados.add(DropdownMenuItem(
         value: estado,
@@ -185,28 +210,51 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
                 Row(
                   children: [
                     Expanded(
-                        child: Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: DropdownButtonFormField(
-                        value: _itemSelecionadoEstado ?? "SP",
-                        hint: const Text("Estados"),
-                        style:
-                            const TextStyle(color: Colors.black, fontSize: 20),
-                        items: _listaItensDropEstados,
-                        validator: (valor) {
-                          return Validador()
-                              .add(Validar.OBRIGATORIO,
-                                  msg: "Campo obrigatório")
-                              .valido(valor);
-                        },
-                        onChanged: (valor) {
-                          setState(() {
-                            _itemSelecionadoEstado = valor;
-                          });
-                        },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: DropdownButtonFormField(
+                          value: _itemSelecionadoEstado ?? "SP",
+                          hint: const Text("Estados"),
+                          style: const TextStyle(
+                              color: Colors.black, fontSize: 20),
+                          items: _listaItensDropEstados,
+                          validator: (valor) {
+                            return Validador()
+                                .add(Validar.OBRIGATORIO,
+                                    msg: "Campo obrigatório")
+                                .valido(valor);
+                          },
+                          onChanged: (valor) {
+                            setState(() {
+                              _itemSelecionadoEstado = valor;
+                            });
+                          },
+                        ),
                       ),
-                    )),
-                    const Text("Categoria"),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: DropdownButtonFormField(
+                          value: _itemSelecionadoCategoria ?? "auto",
+                          hint: const Text("Categorias"),
+                          style: const TextStyle(
+                              color: Colors.black, fontSize: 20),
+                          items: _listaItensDropCategorias,
+                          validator: (valor) {
+                            return Validador()
+                                .add(Validar.OBRIGATORIO,
+                                    msg: "Campo obrigatório")
+                                .valido(valor);
+                          },
+                          onChanged: (valor) {
+                            setState(() {
+                              _itemSelecionadoCategoria = valor;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
                   ],
                 ),
                 const Text("Caixas de textos"),
