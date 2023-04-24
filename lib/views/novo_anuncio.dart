@@ -1,4 +1,6 @@
 import 'package:brasil_fields/brasil_fields.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -22,6 +24,7 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
   final List<DropdownMenuItem<String>> _listaItensDropCategorias = [];
   final _formKey = GlobalKey<FormState>();
   late Anuncio _anuncio;
+  late BuildContext _dialogContext;
 
   String? _itemSelecionadoEstado;
   String? _itemSelecionadoCategoria;
@@ -43,7 +46,25 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
   }
 
   _salvarAnuncio() async {
+    _abrirDialog(_dialogContext);
+
     await _uploadImagens();
+
+    FirebaseAuth auth = FirebaseAuth.instance;
+    final usuarioLogado = auth.currentUser!;
+    String idUsuarioLogado = usuarioLogado.uid;
+
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    db
+        .collection("meus_anuncios")
+        .doc(idUsuarioLogado)
+        .collection("anuncios")
+        .doc(_anuncio.id)
+        .set(_anuncio.toMap())
+        .then((_) {
+      Navigator.pop(_dialogContext);
+      Navigator.pushReplacementNamed(context, "/meus-anuncios");
+    });
   }
 
   Future _uploadImagens() async {
@@ -57,11 +78,29 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
           pastaRaiz.child("meus_anuncios").child(_anuncio.id).child(nomeImagem);
 
       UploadTask uploadTask = arquivo.putFile(imagem!);
-      TaskSnapshot taskSnapshot = uploadTask.snapshot;
+
+      TaskSnapshot taskSnapshot = await uploadTask;
 
       String url = await taskSnapshot.ref.getDownloadURL();
       _anuncio.fotos.add(url);
     }
+  }
+
+  _abrirDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Column(mainAxisSize: MainAxisSize.min, children: const [
+              CircularProgressIndicator(),
+              SizedBox(
+                height: 20,
+              ),
+              Text("Salvando anúncio...")
+            ]),
+          );
+        });
   }
 
   @override
@@ -369,6 +408,8 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
+
+                      _dialogContext = context;
 
                       _salvarAnuncio();
                     }
