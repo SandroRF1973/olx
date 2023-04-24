@@ -21,7 +21,7 @@ class _MeusAnunciosState extends State<MeusAnuncios> {
           Navigator.pushNamed(context, "/novo-anuncio");
         },
       ),
-      body: Container(),
+      body: ListView.builder(itemCount: 4, itemBuilder: (_, indice) {}),
     );
   }
 }

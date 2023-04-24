@@ -63,7 +63,7 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
         .set(_anuncio.toMap())
         .then((_) {
       Navigator.pop(_dialogContext);
-      Navigator.pushReplacementNamed(context, "/meus-anuncios");
+      Navigator.pop(context);
     });
   }
 
