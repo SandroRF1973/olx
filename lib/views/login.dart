@@ -100,6 +100,7 @@ class _LoginState extends State<Login> {
                 InputCustomizado(
                   controller: _controllerSenha,
                   hint: "Senha",
+                  //maxLines: 0,
                   obscure: true,
                 ),
                 Row(
