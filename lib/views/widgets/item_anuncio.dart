@@ -25,6 +25,7 @@ class ItemAnuncio extends StatelessWidget {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: const [
                         Text(
                           "Vídeo Game Nintendo 64",
@@ -37,9 +38,15 @@ class ItemAnuncio extends StatelessWidget {
                   )),
               Expanded(
                   flex: 1,
-                  child: Container(
-                    color: Colors.red,
-                  ))
+                  child: TextButton(
+                      onPressed: () {},
+                      style: TextButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          padding: const EdgeInsets.all(10)),
+                      child: const Icon(
+                        Icons.delete,
+                        color: Colors.white,
+                      )))
             ],
           ),
         ),
