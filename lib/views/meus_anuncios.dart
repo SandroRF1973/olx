@@ -40,7 +40,6 @@ class _MeusAnunciosState extends State<MeusAnuncios> {
           Navigator.pushNamed(context, "/novo-anuncio");
         },
       ),
-<<<<<<< HEAD
       body: StreamBuilder(
           stream: _controller.stream,
           builder: ((context, snapshot) {
@@ -50,13 +49,6 @@ class _MeusAnunciosState extends State<MeusAnuncios> {
                   return const ItemAnuncio();
                 });
           })),
-=======
-      body: ListView.builder(
-          itemCount: 4,
-          itemBuilder: (_, indice) {
-            return const ItemAnuncio();
-          }),
->>>>>>> b4ef5cd2b6679873367702ab575f772e398043a2
     );
   }
 }
