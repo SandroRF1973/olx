@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:olx/models/anuncio.dart';
 import 'package:olx/views/widgets/item_anuncio.dart';
 
 class MeusAnuncios extends StatefulWidget {
@@ -13,8 +15,17 @@ class MeusAnuncios extends StatefulWidget {
 
 class _MeusAnunciosState extends State<MeusAnuncios> {
   final _controller = StreamController<QuerySnapshot>.broadcast();
+  late String _idUsuarioLogado;
 
-  Stream<QuerySnapshot> _adicionarListenerAnuncios() {
+  _recuperarDadosUsuarioLogado() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    final usuarioLogado = auth.currentUser!;
+    _idUsuarioLogado = usuarioLogado.uid;
+  }
+
+  Future<Stream<QuerySnapshot>> _adicionarListenerAnuncios() async {
+    await _recuperarDadosUsuarioLogado();
+
     FirebaseFirestore db = FirebaseFirestore.instance;
     Stream<QuerySnapshot> stream = db
         .collection("meus_anuncios")
@@ -28,7 +39,23 @@ class _MeusAnunciosState extends State<MeusAnuncios> {
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    _adicionarListenerAnuncios();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    var carregandoDados = Center(
+      child: Column(
+        children: const [
+          Text("Carregando anúncios"),
+          CircularProgressIndicator()
+        ],
+      ),
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Meus Anúncios"),
@@ -43,11 +70,29 @@ class _MeusAnunciosState extends State<MeusAnuncios> {
       body: StreamBuilder(
           stream: _controller.stream,
           builder: ((context, snapshot) {
-            return ListView.builder(
-                itemCount: 8,
-                itemBuilder: (_, indice) {
-                  return const ItemAnuncio();
-                });
+            switch (snapshot.connectionState) {
+              case ConnectionState.none:
+              case ConnectionState.waiting:
+                return carregandoDados;
+              case ConnectionState.active:
+              case ConnectionState.done:
+                if (snapshot.hasError) {
+                  return const Text("Erro ao carregar os dados!");
+                }
+
+                QuerySnapshot<Object?>? querySnapshot = snapshot.data;
+
+                return ListView.builder(
+                    itemCount: querySnapshot?.docs.length,
+                    itemBuilder: (_, indice) {
+                      List<DocumentSnapshot> anuncios =
+                          querySnapshot!.docs.toList();
+                      DocumentSnapshot documentSnapshot = anuncios[indice];
+                      Anuncio anuncio = Anuncio();
+
+                      return const ItemAnuncio();
+                    });
+            }
           })),
     );
   }
