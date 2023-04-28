@@ -29,13 +29,25 @@ class _MeusAnunciosState extends State<MeusAnuncios> {
     FirebaseFirestore db = FirebaseFirestore.instance;
     Stream<QuerySnapshot> stream = db
         .collection("meus_anuncios")
-        .doc("idUsuario")
+        .doc(_idUsuarioLogado)
         .collection("anuncios")
         .snapshots();
 
     stream.listen((dados) {
       _controller.add(dados);
     });
+
+    return stream;
+  }
+
+  _removerAnuncio(String idAnuncio) {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    db
+        .collection("meus_anuncios")
+        .doc(_idUsuarioLogado)
+        .collection("anuncios")
+        .doc(idAnuncio)
+        .delete();
   }
 
   @override
@@ -88,9 +100,48 @@ class _MeusAnunciosState extends State<MeusAnuncios> {
                       List<DocumentSnapshot> anuncios =
                           querySnapshot!.docs.toList();
                       DocumentSnapshot documentSnapshot = anuncios[indice];
-                      Anuncio anuncio = Anuncio();
+                      Anuncio anuncio =
+                          Anuncio.fromDocumentSnapShot(documentSnapshot);
 
-                      return const ItemAnuncio();
+                      return ItemAnuncio(
+                        anuncio: anuncio,
+                        onPressedRemover: () {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: const Text("Confirmar"),
+                                  content: const Text(
+                                      "Deseja realmente excluir o anúncio?"),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text(
+                                        "Cancelar",
+                                        style: TextStyle(color: Colors.grey),
+                                      ),
+                                    ),
+                                    TextButton(
+                                      style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                                  Colors.red)),
+                                      onPressed: () {
+                                        _removerAnuncio(anuncio.id);
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text(
+                                        "Remover",
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              });
+                        },
+                      );
                     });
             }
           })),

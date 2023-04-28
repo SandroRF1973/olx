@@ -108,7 +108,7 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
     super.initState();
     _carregarItensDropDown();
 
-    _anuncio = Anuncio();
+    _anuncio = Anuncio.gerarId();
   }
 
   _carregarItensDropDown() {
