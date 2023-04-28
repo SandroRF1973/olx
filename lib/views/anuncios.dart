@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:olx/util/configuracoes.dart';
@@ -13,6 +15,8 @@ class _AnunciosState extends State<Anuncios> {
   List<String> itensMenu = [];
   List<DropdownMenuItem<String>> _listaItensDropEstados = [];
   List<DropdownMenuItem<String>> _listaItensDropCategorias = [];
+
+  final _controller = StreamController<QueryDocumentSnapshot>.broadcast();
 
   String? _itemSelecionadoEstado;
   String? _itemSelecionadoCategoria;
@@ -57,11 +61,23 @@ class _AnunciosState extends State<Anuncios> {
     _listaItensDropEstados = Configuracoes.getEstados();
   }
 
+  Future<Stream<QuerySnapshot>> _adicionarListenerAnuncios() async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    Stream<QuerySnapshot> stream = db.collection("anuncios").snapshots();
+
+    stream.listen((dados) {
+      _controller.add(dados as QueryDocumentSnapshot<Object?>);
+    });
+
+    return stream;
+  }
+
   @override
   void initState() {
     super.initState();
     _carregarItensDropDown();
     _verificaUsuarioLogado();
+    _adicionarListenerAnuncios();
   }
 
   @override
@@ -129,6 +145,18 @@ class _AnunciosState extends State<Anuncios> {
               ),
             ],
           ),
+          StreamBuilder(
+            stream: _controller.stream,
+            builder: (context, snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.none:
+                case ConnectionState.waiting:
+                case ConnectionState.active:
+                case ConnectionState.done:
+              }
+              return Container();
+            },
+          )
         ],
       ),
     );
