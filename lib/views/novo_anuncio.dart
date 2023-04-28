@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:olx/models/anuncio.dart';
+import 'package:olx/util/configuracoes.dart';
 import 'package:olx/views/widgets/botao_customizado.dart';
 import 'package:olx/views/widgets/input_customizado.dart';
 import 'dart:io';
@@ -20,8 +21,8 @@ class NovoAnuncio extends StatefulWidget {
 
 class _NovoAnuncioState extends State<NovoAnuncio> {
   final List<File?> _listaImagens = [];
-  final List<DropdownMenuItem<String>> _listaItensDropEstados = [];
-  final List<DropdownMenuItem<String>> _listaItensDropCategorias = [];
+  List<DropdownMenuItem<String>> _listaItensDropEstados = [];
+  List<DropdownMenuItem<String>> _listaItensDropCategorias = [];
   final _formKey = GlobalKey<FormState>();
   late Anuncio _anuncio;
   late BuildContext _dialogContext;
@@ -62,8 +63,14 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
         .doc(_anuncio.id)
         .set(_anuncio.toMap())
         .then((_) {
-      Navigator.pop(_dialogContext);
-      Navigator.pop(context);
+      db
+          .collection("anuncios")
+          .doc(_anuncio.id)
+          .set(_anuncio.toMap())
+          .then((_) {
+        Navigator.pop(_dialogContext);
+        Navigator.pop(context);
+      });
     });
   }
 
@@ -112,37 +119,9 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
   }
 
   _carregarItensDropDown() {
-    _listaItensDropCategorias.add(const DropdownMenuItem(
-      value: "auto",
-      child: Text("Automóvel"),
-    ));
+    _listaItensDropCategorias = Configuracoes.getCategorias();
 
-    _listaItensDropCategorias.add(const DropdownMenuItem(
-      value: "imovel",
-      child: Text("Imóvel"),
-    ));
-
-    _listaItensDropCategorias.add(const DropdownMenuItem(
-      value: "eletro",
-      child: Text("Eletrônicos"),
-    ));
-
-    _listaItensDropCategorias.add(const DropdownMenuItem(
-      value: "moda",
-      child: Text("Moda"),
-    ));
-
-    _listaItensDropCategorias.add(const DropdownMenuItem(
-      value: "esportes",
-      child: Text("Esportes"),
-    ));
-
-    for (var estado in Estados.listaEstadosSigla) {
-      _listaItensDropEstados.add(DropdownMenuItem(
-        value: estado,
-        child: Text(estado),
-      ));
-    }
+    _listaItensDropEstados = Configuracoes.getEstados();
   }
 
   @override
@@ -280,7 +259,7 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
                       child: Padding(
                         padding: const EdgeInsets.all(8),
                         child: DropdownButtonFormField(
-                          value: _itemSelecionadoEstado ?? "SP",
+                          value: _itemSelecionadoEstado,
                           hint: const Text("Estados"),
                           onSaved: (estado) {
                             _anuncio.estado = estado!;
@@ -306,7 +285,7 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
                       child: Padding(
                         padding: const EdgeInsets.all(8),
                         child: DropdownButtonFormField(
-                          value: _itemSelecionadoCategoria ?? "auto",
+                          value: _itemSelecionadoCategoria,
                           hint: const Text("Categorias"),
                           onSaved: (categoria) {
                             _anuncio.categoria = categoria!;
