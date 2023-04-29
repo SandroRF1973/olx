@@ -2,7 +2,9 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:olx/models/anuncio.dart';
 import 'package:olx/util/configuracoes.dart';
+import 'package:olx/views/widgets/item_anuncio.dart';
 
 class Anuncios extends StatefulWidget {
   const Anuncios({super.key});
@@ -153,8 +155,37 @@ class _AnunciosState extends State<Anuncios> {
                 case ConnectionState.waiting:
                 case ConnectionState.active:
                 case ConnectionState.done:
+                  QuerySnapshot<Object?> querySnapshot =
+                      snapshot.data as QuerySnapshot<Object?>;
+                  if (querySnapshot.docs.isEmpty) {
+                    return Container(
+                      padding: const EdgeInsets.all(25),
+                      child: const Text(
+                        "Nenuhum anúncio! :(",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                    );
+                  }
+
+                  return Expanded(
+                      child: ListView.builder(
+                          itemCount: querySnapshot.docs.length,
+                          itemBuilder: (_, indice) {
+                            List<DocumentSnapshot> anuncios =
+                                querySnapshot.docs.toList();
+                            DocumentSnapshot documentSnapshot =
+                                anuncios[indice];
+                            Anuncio anuncio =
+                                Anuncio.fromDocumentSnapShot(documentSnapshot);
+
+                            return ItemAnuncio(
+                              anuncio: anuncio,
+                              onTapItem: () {},
+                            );
+                          }));
               }
-              return Container();
+              //return Container();
             },
           )
         ],
