@@ -18,7 +18,7 @@ class _AnunciosState extends State<Anuncios> {
   List<DropdownMenuItem<String>> _listaItensDropEstados = [];
   List<DropdownMenuItem<String>> _listaItensDropCategorias = [];
 
-  final _controller = StreamController<QueryDocumentSnapshot>.broadcast();
+  late final _controller = StreamController<QuerySnapshot>.broadcast();
 
   String? _itemSelecionadoEstado;
   String? _itemSelecionadoCategoria;
@@ -68,7 +68,7 @@ class _AnunciosState extends State<Anuncios> {
     Stream<QuerySnapshot> stream = db.collection("anuncios").snapshots();
 
     stream.listen((dados) {
-      _controller.add(dados as QueryDocumentSnapshot<Object?>);
+      _controller.add(dados);
     });
 
     return stream;
@@ -155,9 +155,9 @@ class _AnunciosState extends State<Anuncios> {
                 case ConnectionState.waiting:
                 case ConnectionState.active:
                 case ConnectionState.done:
-                  QuerySnapshot<Object?> querySnapshot =
-                      snapshot.data as QuerySnapshot<Object?>;
-                  if (querySnapshot.docs.isEmpty) {
+                  QuerySnapshot<Object?>? querySnapshot = snapshot.data;
+
+                  if (querySnapshot == null || querySnapshot.docs.isEmpty) {
                     return Container(
                       padding: const EdgeInsets.all(25),
                       child: const Text(
@@ -170,10 +170,10 @@ class _AnunciosState extends State<Anuncios> {
 
                   return Expanded(
                       child: ListView.builder(
-                          itemCount: querySnapshot.docs.length,
+                          itemCount: querySnapshot?.docs.length,
                           itemBuilder: (_, indice) {
                             List<DocumentSnapshot> anuncios =
-                                querySnapshot.docs.toList();
+                                querySnapshot!.docs.toList();
                             DocumentSnapshot documentSnapshot =
                                 anuncios[indice];
                             Anuncio anuncio =
@@ -185,7 +185,6 @@ class _AnunciosState extends State<Anuncios> {
                             );
                           }));
               }
-              //return Container();
             },
           )
         ],
