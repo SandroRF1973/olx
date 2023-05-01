@@ -46,49 +46,49 @@ class Anuncio {
     return map;
   }
 
-  String get id => _id!;
+  String get id => _id ?? "";
 
   set id(String value) {
     _id = value;
   }
 
-  String get estado => _estado!;
+  String get estado => _estado ?? "";
 
   set estado(String value) {
     _estado = value;
   }
 
-  String get categoria => _categoria!;
+  String get categoria => _categoria ?? "";
 
   set categoria(String value) {
     _categoria = value;
   }
 
-  String get titulo => _titulo!;
+  String get titulo => _titulo ?? "";
 
   set titulo(String value) {
     _titulo = value;
   }
 
-  String get preco => _preco!;
+  String get preco => _preco ?? "";
 
   set preco(String value) {
     _preco = value;
   }
 
-  String get telefone => _telefone!;
+  String get telefone => _telefone ?? "";
 
   set telefone(String value) {
     _telefone = value;
   }
 
-  String get descricao => _descricao!;
+  String get descricao => _descricao ?? "";
 
   set descricao(String value) {
     _descricao = value;
   }
 
-  List<String> get fotos => _fotos!;
+  List<String> get fotos => _fotos ?? [];
 
   set fotos(List<String> value) {
     _fotos = value;

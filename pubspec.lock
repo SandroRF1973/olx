@@ -33,6 +33,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.1"
+  carousel_pro_nullsafety:
+    dependency: "direct main"
+    description:
+      name: carousel_pro_nullsafety
+      sha256: "2b45788fb88f55f5d58ec2f2c0d1430bcb1096fec57969052bb831a68c9609d0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   characters:
     dependency: transitive
     description:
@@ -407,4 +415,4 @@ packages:
     version: "2.1.4"
 sdks:
   dart: ">=2.19.6 <3.0.0"
-  flutter: ">=3.3.0"
+  flutter: ">=3.7.0"
