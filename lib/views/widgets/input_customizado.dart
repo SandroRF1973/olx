@@ -7,7 +7,7 @@ class InputCustomizado extends StatelessWidget {
   final bool? obscure;
   final bool? autofocus;
   final TextInputType? type;
-  //final int? maxLines;
+  final int? maxLines;
   final List<TextInputFormatter>? inputFormatters;
   final String? Function(String?)? validator;
   final String? Function(String?)? onSaved;
@@ -19,7 +19,7 @@ class InputCustomizado extends StatelessWidget {
       this.obscure = false,
       this.autofocus = false,
       this.type = TextInputType.text,
-      //this.maxLines,
+      this.maxLines = 1,
       this.inputFormatters,
       this.validator,
       this.onSaved});
