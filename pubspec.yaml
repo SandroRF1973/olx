@@ -43,6 +43,7 @@ dependencies:
   brasil_fields: ^1.9.1
   validadores: ^1.0.5
   carousel_pro_nullsafety: ^2.0.0
+  url_launcher: ^6.1.10
 
 dev_dependencies:
   flutter_test:
