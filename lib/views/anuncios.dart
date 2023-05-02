@@ -104,6 +104,15 @@ class _AnunciosState extends State<Anuncios> {
 
   @override
   Widget build(BuildContext context) {
+    var carregandoDados = Center(
+      child: Column(
+        children: const [
+          Text("Carregando anúncios"),
+          CircularProgressIndicator()
+        ],
+      ),
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("OLX"),
@@ -175,6 +184,8 @@ class _AnunciosState extends State<Anuncios> {
               switch (snapshot.connectionState) {
                 case ConnectionState.none:
                 case ConnectionState.waiting:
+                  return carregandoDados;
+
                 case ConnectionState.active:
                 case ConnectionState.done:
                   QuerySnapshot<Object?>? querySnapshot = snapshot.data;

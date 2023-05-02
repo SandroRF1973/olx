@@ -1,5 +1,6 @@
 import 'package:carousel_pro_nullsafety/carousel_pro_nullsafety.dart';
 import 'package:flutter/material.dart';
+import 'package:olx/main.dart';
 import 'package:olx/models/anuncio.dart';
 
 class DetalhesAnuncio extends StatefulWidget {
@@ -16,7 +17,12 @@ class _DetalhesAnuncioState extends State<DetalhesAnuncio> {
   List<Widget> _getListaImagens() {
     List<String> listaUrlImagens = _anuncio.fotos;
     return listaUrlImagens.map((url) {
-      return Image.network(url);
+      return Container(
+        height: 250,
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                image: NetworkImage(url), fit: BoxFit.fitWidth)),
+      );
     }).toList();
   }
 
@@ -40,6 +46,11 @@ class _DetalhesAnuncioState extends State<DetalhesAnuncio> {
                 height: 250,
                 child: Carousel(
                   images: _getListaImagens(),
+                  dotSize: 8,
+                  dotBgColor: Colors.transparent,
+                  dotColor: Colors.white,
+                  autoplay: false,
+                  dotIncreasedColor: temaPadrao.primaryColor,
                 ),
               )
             ],
